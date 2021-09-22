@@ -2,4 +2,4 @@
 
 #include <opencv2/opencv.hpp>
 
-cv::Mat processFrame(cv::Mat Frame);
+void processFrame(cv::Mat Frame);

@@ -4,19 +4,24 @@
 
 const char *ASCII_ARRAY{".-+*wGHM#&%"}; // * 12 Levels
 
-cv::Mat processFrame(cv::Mat Frame)
+void processFrame(cv::Mat Frame)
 {
     cv::cvtColor(Frame, Frame, cv::COLOR_BGR2GRAY);
-    cv::resize(Frame, Frame, cv::Size(120, 80));
+    cv::resize(Frame, Frame, cv::Size(120, 30));
+
+    std::string screen{"\n\n\n\n\n"};
+    screen.reserve(120 * 30 * 2);
 
     for (int i = 0; i < Frame.rows; i++)
     {
         const uint8_t *col = Frame.ptr<uint8_t>(i);
         for (int j = 0; j < Frame.cols; j++)
-            std::cout << col[j] << " ";
-        std::cout << std::endl;
+        {
+            screen += ASCII_ARRAY[(int)col[j] * 11 / 256];
+        }
+        screen += '\n';
     }
-    std::cout << "=====================" << std::endl;
+    screen.pop_back();
 
-    return Frame;
+    std::cout << screen;
 }
