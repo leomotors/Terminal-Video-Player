@@ -23,8 +23,8 @@ target_link_libraries(${EXECUTABLE_NAME} ${OpenCV_LIBS})
 # CPP STANDARD
 set_property(TARGET ${EXECUTABLE_NAME} PROPERTY CXX_STANDARD 17)
 
-# For Linux
-add_custom_command(TARGET ${EXECUTABLE_NAME} POST_BUILD
-    COMMAND mv ${EXECUTABLE_NAME} ..
-    COMMENT "Moving Executable to Project Root..."
+# Install
+install(
+    TARGETS ${EXECUTABLE_NAME}
+    RUNTIME DESTINATION /usr/local/bin
 )
