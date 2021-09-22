@@ -15,7 +15,7 @@ Don't Except Quality from Here
 
 - `mkdir build && cd build`
 
-- `cmake .. && build`
+- `cmake .. && make`
 
 - `sudo make install`
 
