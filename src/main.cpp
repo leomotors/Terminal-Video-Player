@@ -2,6 +2,7 @@
 
 #include <chrono>
 #include <cstdlib>
+#include <future>
 #include <iostream>
 #include <opencv2/opencv.hpp>
 #include <string>
@@ -9,6 +10,11 @@
 
 #define DEFAULT_WIDTH 120
 #define DEFAULT_HEIGHT 30
+
+extern "C"
+{
+#include "lib/playAudio.h"
+}
 
 int main(int argc, char *argv[])
 {
@@ -48,6 +54,11 @@ int main(int argc, char *argv[])
     std::string input_file(argv[1]);
     cv::VideoCapture InputVid(input_file);
 
+    std::string toExec("ffmpeg -i \"");
+    toExec += input_file + "\" .tplaytemp.mp3";
+    std::cout << "Executing: " << toExec << std::endl;
+    std::system(toExec.c_str());
+
     if (!InputVid.isOpened())
     {
         std::cerr << "Error Opening Video File" << std::endl;
@@ -55,6 +66,9 @@ int main(int argc, char *argv[])
     }
 
     const double fps = InputVid.get(cv::CAP_PROP_FPS);
+
+    // https://stackoverflow.com/questions/44654548/stdasync-doesnt-work-asynchronously
+    std::future<void> audio = std::async(std::launch::async, playAudio, ".tplaytemp.mp3");
 
     while (true)
     {
@@ -69,6 +83,10 @@ int main(int argc, char *argv[])
     }
 
     InputVid.release();
+
+    const char *rmCmd{"rm .tplaytemp.mp3"};
+    std::cout << "Executing: " << rmCmd << std::endl;
+    std::system(rmCmd);
 
     return EXIT_SUCCESS;
 }
