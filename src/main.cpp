@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
 {
     if (argc < 2)
     {
-        std::cout << "Error: Invalid Argument!" << std::endl;
+        std::cerr << "Error: Invalid Argument!" << std::endl;
         return EXIT_FAILURE;
     }
 
@@ -23,18 +23,24 @@ int main(int argc, char *argv[])
 
     if (argc > 2)
     {
+        if (argc < 4)
+        {
+            std::cerr << "Please specify height too!" << std::endl;
+            return EXIT_FAILURE;
+        }
+
         std::stringstream swidth(argv[2]), sheight(argv[3]);
         swidth >> width;
         sheight >> height;
 
         if (width <= 0 || width >= 1280)
         {
-            std::cout << "Invalid Width of " << width << " (" << argv[2] << ")" << std::endl;
+            std::cerr << "Invalid Width of " << width << " (" << argv[2] << ")" << std::endl;
             return EXIT_FAILURE;
         }
         if (height <= 0 || height >= 720)
         {
-            std::cout << "Invalid Height of " << height << " (" << argv[3] << ")" << std::endl;
+            std::cerr << "Invalid Height of " << height << " (" << argv[3] << ")" << std::endl;
             return EXIT_FAILURE;
         }
     }

@@ -2,7 +2,7 @@
 
 RIP My Eyes
 
-Don't Except Quality from Here
+Don't Expect Quality from Here
 
 ## 🌿 Dependencies
 
