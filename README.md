@@ -19,4 +19,4 @@ Don't Except Quality from Here
 
 - `sudo make install`
 
-- `tplay "Your Video File"`
+- `tplay "Your Video File" [Optional: Width and Height]`

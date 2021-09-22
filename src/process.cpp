@@ -1,16 +1,18 @@
 #include "process.hpp"
 
+#include <iostream>
 #include <opencv2/opencv.hpp>
+#include <string>
 
 const char *ASCII_ARRAY{".-+*wGHM#&%"}; // * 12 Levels
 
-void processFrame(cv::Mat Frame)
+void processFrame(cv::Mat Frame, int width, int height)
 {
     cv::cvtColor(Frame, Frame, cv::COLOR_BGR2GRAY);
-    cv::resize(Frame, Frame, cv::Size(120, 30));
+    cv::resize(Frame, Frame, cv::Size(width, height));
 
     std::string screen{"\n\n\n\n\n"};
-    screen.reserve(120 * 30 * 2);
+    screen.reserve(width * height * 2);
 
     for (int i = 0; i < Frame.rows; i++)
     {
