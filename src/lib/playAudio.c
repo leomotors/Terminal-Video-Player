@@ -4,6 +4,7 @@
 #include "playAudio.h"
 
 #include <ao/ao.h>
+#include <stdlib.h>
 #include <mpg123.h>
 
 void playAudio(const char *filename)
@@ -40,6 +41,9 @@ void playAudio(const char *filename)
     format.byte_format = AO_FMT_NATIVE;
     format.matrix = 0;
     dev = ao_open_live(driver, &format, NULL);
+
+    // * On Success Import, Delete the File as it is temp
+    system("rm .tplaytemp.mp3");
 
     /* decode and play */
     while (mpg123_read(mh, buffer, buffer_size, &done) == MPG123_OK)
