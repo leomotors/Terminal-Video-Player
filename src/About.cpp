@@ -4,7 +4,7 @@
 
 #include "AppProps.h"
 
-std::string About()
+std::string tplay::about::About()
 {
     return std::string("Terminal Video Player\nVersion: ") + APP_VERSION +
            "\nMade by Leomotors\n" +
@@ -12,7 +12,7 @@ std::string About()
            "https://github.com/Leomotors/Terminal-Video-Player";
 }
 
-std::string AboutShort()
+std::string tplay::about::AboutShort()
 {
     return std::string("Terminal Video Player ") + APP_VERSION;
 }

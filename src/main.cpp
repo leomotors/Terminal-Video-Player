@@ -1,5 +1,3 @@
-#include "process.hpp"
-
 #include <chrono>
 #include <cstdlib>
 #include <future>
@@ -15,6 +13,8 @@ extern "C"
 }
 
 #include "About.hpp"
+#include "process.hpp"
+#include "utils.hpp"
 
 int main(int argc, char *argv[])
 {
@@ -28,7 +28,7 @@ int main(int argc, char *argv[])
     {
         if (argv[1][1] == 'v')
         {
-            std::cout << About() << std::endl;
+            std::cout << tplay::about::About() << std::endl;
             return EXIT_SUCCESS;
         }
         if (argv[1][1] == 'h')
@@ -51,6 +51,12 @@ int main(int argc, char *argv[])
     }
 
     const double fps = InputVid.get(cv::CAP_PROP_FPS);
+    const int totalFrames = InputVid.get(cv::CAP_PROP_FRAME_COUNT);
+
+    std::cout << tplay::about::AboutShort() << "\n"
+              << "Input Video: " << argv[1] << "\n"
+              << "Video FPS: " << fps << "\n"
+              << std::endl;
 
     std::string toExec("ffmpeg -y -i \"");
     toExec += input_file + "\" .tplaytemp.mp3";
@@ -63,12 +69,13 @@ int main(int argc, char *argv[])
     std::future<void> audio = std::async(std::launch::async, playAudio,
                                          ".tplaytemp.mp3", &setupCompleted);
 
+    tplay::utils::String filename(argv[1]);
+    int framesPassed{0};
+
     while (!setupCompleted)
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
 
-    auto StartTime = std::chrono::steady_clock::now();
-    int framesPassed{0};
-
+    const auto StartTime = std::chrono::steady_clock::now();
     while (true)
     {
         cv::Mat frame;
@@ -78,10 +85,15 @@ int main(int argc, char *argv[])
         if (frame.empty())
             break;
 
-        processFrame(frame, getWinCol(), getWinRow() - 1);
+        int col = getWinCol();
+        int row = getWinRow() - 1;
+        processFrame(frame, col, row,
+                     tplay::utils::createHeader(filename, framesPassed,
+                                                totalFrames, fps, col));
+
         std::this_thread::sleep_until(
-            StartTime +
-            std::chrono::microseconds((int)(1000000 * framesPassed / fps)));
+            StartTime + std::chrono::microseconds(
+                            (int64_t)(1000000.0 * framesPassed / fps)));
     }
 
     InputVid.release();
