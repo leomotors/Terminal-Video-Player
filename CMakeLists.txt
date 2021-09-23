@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(Terminal-Video-Player VERSION 1.0.12)
+project(Terminal-Video-Player VERSION 1.0.13)
 
 # Config
 set(APP_VERSION "${CMAKE_PROJECT_VERSION}")

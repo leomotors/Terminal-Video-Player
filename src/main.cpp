@@ -85,15 +85,20 @@ int main(int argc, char *argv[])
         if (frame.empty())
             break;
 
+        auto expectedTime =
+            StartTime + std::chrono::microseconds(
+                            (int64_t)(1000000.0 * framesPassed / fps));
+
+        if (std::chrono::steady_clock::now() > expectedTime)
+            continue;
+
         int col = getWinCol();
         int row = getWinRow() - 1;
         processFrame(frame, col, row,
                      tplay::utils::createHeader(filename, framesPassed,
                                                 totalFrames, fps, col));
 
-        std::this_thread::sleep_until(
-            StartTime + std::chrono::microseconds(
-                            (int64_t)(1000000.0 * framesPassed / fps)));
+        std::this_thread::sleep_until(expectedTime);
     }
 
     InputVid.release();
