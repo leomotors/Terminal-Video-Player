@@ -6,6 +6,13 @@
 
 std::string About()
 {
-    return std::string("Terminal Video Player\nVersion: ") + APP_VERSION + "\nMade by Leomotors\n" +
-           "GitHub Repository: https://github.com/Leomotors/Terminal-Video-Player";
+    return std::string("Terminal Video Player\nVersion: ") + APP_VERSION +
+           "\nMade by Leomotors\n" +
+           "GitHub Repository: "
+           "https://github.com/Leomotors/Terminal-Video-Player";
+}
+
+std::string AboutShort()
+{
+    return std::string("Terminal Video Player ") + APP_VERSION;
 }

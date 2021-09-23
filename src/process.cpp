@@ -11,7 +11,7 @@ void processFrame(cv::Mat Frame, int width, int height)
     cv::cvtColor(Frame, Frame, cv::COLOR_BGR2GRAY);
     cv::resize(Frame, Frame, cv::Size(width, height));
 
-    std::string screen{"\n\n\n\n\n"};
+    std::string screen{'\n'};
     screen.reserve(width * height * 2);
 
     for (int i = 0; i < Frame.rows; i++)
@@ -25,5 +25,6 @@ void processFrame(cv::Mat Frame, int width, int height)
     }
     screen.pop_back();
 
-    std::cout << screen;
+    std::cout << "\033[0;0H";
+    std::cout << screen << std::flush;
 }

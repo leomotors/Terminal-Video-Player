@@ -8,13 +8,12 @@
 #include <string>
 #include <thread>
 
-#define DEFAULT_WIDTH 120
-#define DEFAULT_HEIGHT 30
-
 extern "C"
 {
 #include "lib/playAudio.h"
+#include "lib/winSize.h"
 }
+
 #include "About.hpp"
 
 int main(int argc, char *argv[])
@@ -34,7 +33,7 @@ int main(int argc, char *argv[])
         }
         if (argv[1][1] == 'h')
         {
-            std::cout << "Usage: tplay filename [Optional: Width Height]" << std::endl;
+            std::cout << "Usage: tplay \"Your Video File Name\"" << std::endl;
             return EXIT_SUCCESS;
         }
 
@@ -42,40 +41,8 @@ int main(int argc, char *argv[])
         return EXIT_FAILURE;
     }
 
-    int width{DEFAULT_WIDTH};
-    int height{DEFAULT_HEIGHT};
-
-    if (argc > 2)
-    {
-        if (argc < 4)
-        {
-            std::cerr << "Please specify height too!" << std::endl;
-            return EXIT_FAILURE;
-        }
-
-        std::stringstream swidth(argv[2]), sheight(argv[3]);
-        swidth >> width;
-        sheight >> height;
-
-        if (width <= 0 || width >= 1280)
-        {
-            std::cerr << "Invalid Width of " << width << " (" << argv[2] << ")" << std::endl;
-            return EXIT_FAILURE;
-        }
-        if (height <= 0 || height >= 720)
-        {
-            std::cerr << "Invalid Height of " << height << " (" << argv[3] << ")" << std::endl;
-            return EXIT_FAILURE;
-        }
-    }
-
     std::string input_file(argv[1]);
     cv::VideoCapture InputVid(input_file);
-
-    std::string toExec("ffmpeg -y -i \"");
-    toExec += input_file + "\" .tplaytemp.mp3";
-    std::cout << "Executing: " << toExec << std::endl;
-    std::system(toExec.c_str());
 
     if (!InputVid.isOpened())
     {
@@ -85,12 +52,23 @@ int main(int argc, char *argv[])
 
     const double fps = InputVid.get(cv::CAP_PROP_FPS);
 
+    std::string toExec("ffmpeg -y -i \"");
+    toExec += input_file + "\" .tplaytemp.mp3";
+    std::cout << "Executing: " << toExec << std::endl;
+    std::system(toExec.c_str());
+
+    bool setupCompleted{false};
+
     // https://stackoverflow.com/questions/44654548/stdasync-doesnt-work-asynchronously
-    std::future<void> audio = std::async(std::launch::async, playAudio, ".tplaytemp.mp3");
+    std::future<void> audio = std::async(std::launch::async, playAudio,
+                                         ".tplaytemp.mp3", &setupCompleted);
+
+    while (!setupCompleted)
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
 
     auto StartTime = std::chrono::steady_clock::now();
-
     int framesPassed{0};
+
     while (true)
     {
         cv::Mat frame;
@@ -100,12 +78,12 @@ int main(int argc, char *argv[])
         if (frame.empty())
             break;
 
-        processFrame(frame, width, height);
+        processFrame(frame, getWinCol(), getWinRow() - 1);
         std::this_thread::sleep_until(
-            StartTime + std::chrono::microseconds((int)(1000000 * framesPassed / fps)));
+            StartTime +
+            std::chrono::microseconds((int)(1000000 * framesPassed / fps)));
     }
 
     InputVid.release();
-
     return EXIT_SUCCESS;
 }

@@ -3,3 +3,5 @@
 #include <string>
 
 std::string About();
+
+std::string AboutShort();

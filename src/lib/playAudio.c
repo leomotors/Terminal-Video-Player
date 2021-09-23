@@ -4,10 +4,13 @@
 #include "playAudio.h"
 
 #include <ao/ao.h>
-#include <stdlib.h>
 #include <mpg123.h>
+#include <stdbool.h>
+#include <stdlib.h>
 
-void playAudio(const char *filename)
+#define BITS 8
+
+void playAudio(const char *filename, bool *setup)
 {
     mpg123_handle *mh;
     unsigned char *buffer;
@@ -44,6 +47,9 @@ void playAudio(const char *filename)
 
     // * On Success Import, Delete the File as it is temp
     system("rm .tplaytemp.mp3");
+
+    if (setup)
+        *setup = true;
 
     /* decode and play */
     while (mpg123_read(mh, buffer, buffer_size, &done) == MPG123_OK)

@@ -3,6 +3,6 @@
 
 #pragma once
 
-#define BITS 8
+#include <stdbool.h>
 
-void playAudio(const char *filename);
+void playAudio(const char *filename, bool *setup);
