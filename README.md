@@ -12,6 +12,10 @@ Don't Expect Quality from Here
 
   `sudo apt install libmpg123-dev libao-dev`
 
+- FFmpeg
+
+  `sudo apt install ffmpeg`
+
 ## ⚙️ Compile & Install
 
 - `git clone https://github.com/Leomotors/Terminal-Video-Player`
