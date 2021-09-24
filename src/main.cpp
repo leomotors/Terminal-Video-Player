@@ -16,6 +16,9 @@ extern "C"
 #include "process.hpp"
 #include "utils.hpp"
 
+#define DEFAULT_OPTION_1 2
+#define DEFAULT_OPTION_2 1
+
 int main(int argc, char *argv[])
 {
     if (argc < 2)
@@ -33,13 +36,39 @@ int main(int argc, char *argv[])
         }
         if (argv[1][1] == 'h')
         {
-            std::cout << "Usage: tplay \"Your Video File Name\"" << std::endl;
+            std::cout
+                << "Usage: tplay \"Your Video File Name\""
+                << " [Optional: -lxx (See src/process.cpp for more detail)]"
+                << std::endl;
             return EXIT_SUCCESS;
         }
 
         std::cerr << "Unknown Option: " << argv[1] << std::endl;
         return EXIT_FAILURE;
     }
+
+    int options1{DEFAULT_OPTION_1};
+    int options2{DEFAULT_OPTION_2};
+
+    if (argc == 3)
+    {
+        if (argv[2][0] != '-')
+        {
+            std::cerr << "Invalid Arguments: " << argv[2][0] << std::endl;
+            return EXIT_FAILURE;
+        }
+        if (argv[2][1] != 'l')
+        {
+            std::cerr << "Invalid Arguments: " << argv[2][0] << std::endl;
+            return EXIT_FAILURE;
+        }
+        if (argv[2][2] == '1')
+            options1 = 1;
+        if (argv[2][2] && argv[2][3] == '2')
+            options2 = 2;
+    }
+
+    tplay::process::setup(options1, options2);
 
     std::string input_file(argv[1]);
     cv::VideoCapture InputVid(input_file);
@@ -94,9 +123,10 @@ int main(int argc, char *argv[])
 
         int col = getWinCol();
         int row = getWinRow() - 1;
-        processFrame(frame, col, row,
-                     tplay::utils::createHeader(filename, framesPassed,
-                                                totalFrames, fps, col));
+        tplay::process::processFrame(
+            frame, col, row,
+            tplay::utils::createHeader(filename, framesPassed, totalFrames, fps,
+                                       col));
 
         std::this_thread::sleep_until(expectedTime);
     }

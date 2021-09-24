@@ -4,4 +4,5 @@ BreakBeforeBraces: Allman
 AllowShortIfStatementsOnASingleLine: false
 IndentCaseLabels: false
 ColumnLimit: 80
+ReflowComments: false
 AllowShortFunctionsOnASingleLine: Empty

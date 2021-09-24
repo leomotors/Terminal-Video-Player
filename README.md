@@ -4,6 +4,16 @@ RIP My Eyes, Low Resolution Video Player driven by ASCII Characters
 
 Don't Expect Quality from Here
 
+## ✨ Features
+
+- Play any Video, Right in your terminal
+
+- With audio!
+
+- and Timestamp displaying in realtime
+
+- with Resolution adjusted automatically depends on terminal window size!
+
 ## 🌿 Dependencies
 
 - OpenCV 4.5.3
@@ -28,7 +38,7 @@ Don't Expect Quality from Here
 
 - `sudo make install`
 
-- `tplay "Your Video File Name"`
+- `tplay "Your Video File Name" [Optional: -lxx (See src/process.cpp for more detail)]`
 
 ## 🙏 Credits
 

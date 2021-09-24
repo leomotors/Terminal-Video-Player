@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(Terminal-Video-Player VERSION 1.0.13)
+project(Terminal-Video-Player VERSION 1.0.14)
 
 # Config
 set(APP_VERSION "${CMAKE_PROJECT_VERSION}")
@@ -29,7 +29,7 @@ add_executable(${EXECUTABLE_NAME} ${APP_SRC})
 
 target_compile_options(${AUDIOLIB_NAME} PRIVATE -Wall -Wextra -Wno-unused-result -O3 -lm)
 target_compile_options(${WINSIZELIB_NAME} PRIVATE -Wall -Wextra -Wno-unused-result -O3 -lm)
-set(CMAKE_CXX_FLAGS "-Wall -Wextra -Wno-unused-result -O3 -lm -pthread")
+set(CMAKE_CXX_FLAGS "-Wall -Wextra -Wno-unused-result -Wno-unused-variable -O3 -lm -pthread")
 
 # Linking Libraries for playAudio
 target_link_libraries(${AUDIOLIB_NAME} mpg123 ao)
