@@ -7,9 +7,11 @@
 
 #include "colors.hpp"
 
-// * Options 1: 1 for 11 Levels, 2 for 69 Levels (Default)
-// * Options 2: 1 to use dot for darkest (Default),
-// * 2 to use blank space for darkest
+// * Second Argument
+// * Default: c21
+// * c for Color, l for White-Black
+// * Options 1: 1 for 11 Levels, 2 for 69 Levels
+// * Options 2: 1 to use dot for darkest, 2 to use blank space for darkest
 
 namespace tplay::process {
 
@@ -35,8 +37,10 @@ void setup(int options1, int options2) {
 }
 
 void setupColor(int options2) {
-    for (int i = 0; i < ascii_arrlen; i++) {
-        for (int c = 0; c < 16; c++) {
+    for (int c = 0; c < 16; c++) {
+        if (colors::isDisabledColor(static_cast<colors::Colors>(c))) continue;
+
+        for (int i = 0; i < ascii_arrlen; i++) {
             colors::addAnsiToMap(
                 static_cast<colors::Colors>(c), ascii_array[i],
                 options2 == 1 ? static_cast<double>(i + 1) / (ascii_arrlen)

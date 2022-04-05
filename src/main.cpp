@@ -1,4 +1,5 @@
 #include <chrono>
+#include <cmath>
 #include <cstdlib>
 #include <future>
 #include <iostream>
@@ -30,10 +31,10 @@ int main(int argc, char *argv[]) {
             return EXIT_SUCCESS;
         }
         if (argv[1][1] == 'h') {
-            std::cout
-                << "Usage: tplay \"Your Video File Name\""
-                << " [Optional: -lxx (See src/process.cpp for more detail)]"
-                << std::endl;
+            std::cout << "Usage: tplay \"Your Video File Name\""
+                      << " [Optional: -cxx or -lxx (See src/process.cpp for "
+                         "more detail)]"
+                      << std::endl;
             return EXIT_SUCCESS;
         }
 
@@ -41,25 +42,32 @@ int main(int argc, char *argv[]) {
         return EXIT_FAILURE;
     }
 
-    int options1{DEFAULT_OPTION_1};
-    int options2{DEFAULT_OPTION_2};
+    int options1 = DEFAULT_OPTION_1;
+    int options2 = DEFAULT_OPTION_2;
+
+    bool ColorMode = true;
 
     if (argc == 3) {
         if (argv[2][0] != '-') {
             std::cerr << "Invalid Arguments: " << argv[2][0] << std::endl;
             return EXIT_FAILURE;
         }
-        if (argv[2][1] != 'l') {
+        if (argv[2][1] != 'l' && argv[2][1] != 'c') {
             std::cerr << "Invalid Arguments: " << argv[2][0] << std::endl;
             return EXIT_FAILURE;
         }
+
+        if (argv[2][1] != 'c') {
+            ColorMode = false;
+        }
+
         if (argv[2][2] == '1') options1 = 1;
         if (argv[2][2] && argv[2][3] == '2') options2 = 2;
     }
 
     tplay::process::setup(options1, options2);
 
-    tplay::process::setupColor(options2);
+    if (ColorMode) tplay::process::setupColor(options2);
 
     std::string input_file(argv[1]);
     cv::VideoCapture InputVid(input_file);
@@ -115,7 +123,8 @@ int main(int argc, char *argv[]) {
 
         int col = getWinCol();
         int row = getWinRow() - 1;
-        tplay::process::processFrameColor(
+        (ColorMode ? tplay::process::processFrameColor
+                   : tplay::process::processFrame)(
             frame, col, row,
             tplay::utils::createHeader(filename, framesPassed, totalLength, fps,
                                        col));
@@ -127,12 +136,24 @@ int main(int argc, char *argv[]) {
 
     int32_t frameRendered = totalFrames - framesMissed;
     double apparentFPS = frameRendered / totalLength;
+    apparentFPS = apparentFPS > fps ? fps : apparentFPS;
 
-    std::cout << "Missed " << framesMissed << " frames from total of "
-              << totalFrames << " frames\n";
+    int lastcol = getWinCol();
+    int lastrow = getWinRow() - 1;
+
+    std::cout << "\nBENCHMARK RESULT\n";
+    std::cout << "Current Resolution (NOT AVERAGE): " << lastcol << "x"
+              << lastrow << " (" << lastcol * lastrow << " pixels)\n";
+    std::cout << "Successfully played " << totalFrames - framesMissed
+              << " from " << totalFrames << " frames\n";
     std::cout << "Actual FPS: " << fps << "\n";
     std::cout << "Average Apparent FPS: " << apparentFPS << "\n";
-    std::cout << "Benchmark Result: " << apparentFPS / fps * 100 << "%\n";
+    std::cout << "FPS Percentage: " << apparentFPS / fps * 100 << "%\n";
+
+    double score = (lastcol * lastrow / (80.0 * 24.0) * 1000.0) * (fps / 30) *
+                   std::pow(apparentFPS / fps, 0.8);
+
+    std::cout << "BENCHMARK SCORE: " << score << "\n";
 
     return EXIT_SUCCESS;
 }
