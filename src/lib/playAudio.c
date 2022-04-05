@@ -10,8 +10,7 @@
 
 #define BITS 8
 
-void playAudio(const char *filename, bool *setup)
-{
+void playAudio(const char *filename, bool *setup) {
     mpg123_handle *mh;
     unsigned char *buffer;
     size_t buffer_size;
@@ -48,8 +47,7 @@ void playAudio(const char *filename, bool *setup)
     // * On Success Import, Delete the File as it is temp
     system("rm .tplaytemp.mp3");
 
-    if (setup)
-        *setup = true;
+    if (setup) *setup = true;
 
     /* decode and play */
     while (mpg123_read(mh, buffer, buffer_size, &done) == MPG123_OK)

@@ -4,15 +4,17 @@
 
 #include "AppProps.h"
 
-std::string tplay::about::About()
-{
+namespace tplay::about {
+
+std::string About() {
     return std::string("Terminal Video Player\nVersion: ") + APP_VERSION +
            "\nMade by Leomotors\n" +
            "GitHub Repository: "
            "https://github.com/Leomotors/Terminal-Video-Player";
 }
 
-std::string tplay::about::AboutShort()
-{
+std::string AboutShort() {
     return std::string("Terminal Video Player ") + APP_VERSION;
 }
+
+}  // namespace tplay::about

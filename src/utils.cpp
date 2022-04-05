@@ -5,15 +5,15 @@
 #include <iostream>
 #include <string>
 
-extern "C"
-{
+extern "C" {
 #include "lib/getch.h"
 }
 
 #include "About.hpp"
 
-tplay::utils::String::String(char *filename) : content(filename)
-{
+namespace tplay::utils {
+
+String::String(char *filename) : content(filename) {
     // https://thoughtsordiscoveries.wordpress.com/2017/04/26/set-and-read-cursor-position-in-terminal-windows-and-linux/
     int x, y;
 
@@ -21,8 +21,7 @@ tplay::utils::String::String(char *filename) : content(filename)
 
     std::printf("%s\033[6n", filename);
 
-    do
-    {
+    do {
         result += getch();
     } while (result.back() != 'R');
 
@@ -31,14 +30,11 @@ tplay::utils::String::String(char *filename) : content(filename)
     this->actualLength = y - 1;
 }
 
-std::string tplay::utils::createHeader(String filename, int framesPassed,
-                                       int totalFrames, double fps,
-                                       int colLimit)
-{
+std::string createHeader(String filename, int framesPassed, int totalFrames,
+                         double fps, int colLimit) {
     const std::string about = tplay::about::AboutShort();
 
-    if (about.size() > (std::size_t)colLimit)
-        return std::string(colLimit, ' ');
+    if (about.size() > (std::size_t)colLimit) return std::string(colLimit, ' ');
 
     int totalLength = totalFrames / fps;
     int currentTime = framesPassed / fps;
@@ -60,11 +56,12 @@ std::string tplay::utils::createHeader(String filename, int framesPassed,
                        ' ');
 }
 
-std::string tplay::utils::formatTime(int seconds)
-{
+std::string formatTime(int seconds) {
     int minutes = seconds / 60;
     seconds %= 60;
 
     return std::to_string(minutes) + ":" + (seconds < 10 ? "0" : "") +
            std::to_string(seconds);
 }
+
+}  // namespace tplay::utils

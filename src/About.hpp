@@ -2,8 +2,9 @@
 
 #include <string>
 
-namespace tplay::about
-{
+namespace tplay::about {
+
 std::string About();
 std::string AboutShort();
-} // namespace tplay::about
+
+}  // namespace tplay::about

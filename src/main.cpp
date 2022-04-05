@@ -6,8 +6,7 @@
 #include <string>
 #include <thread>
 
-extern "C"
-{
+extern "C" {
 #include "lib/playAudio.h"
 #include "lib/winSize.h"
 }
@@ -19,23 +18,18 @@ extern "C"
 #define DEFAULT_OPTION_1 2
 #define DEFAULT_OPTION_2 1
 
-int main(int argc, char *argv[])
-{
-    if (argc < 2)
-    {
+int main(int argc, char *argv[]) {
+    if (argc < 2) {
         std::cerr << "Error: Invalid Argument!" << std::endl;
         return EXIT_FAILURE;
     }
 
-    if (argv[1][0] == '-')
-    {
-        if (argv[1][1] == 'v')
-        {
+    if (argv[1][0] == '-') {
+        if (argv[1][1] == 'v') {
             std::cout << tplay::about::About() << std::endl;
             return EXIT_SUCCESS;
         }
-        if (argv[1][1] == 'h')
-        {
+        if (argv[1][1] == 'h') {
             std::cout
                 << "Usage: tplay \"Your Video File Name\""
                 << " [Optional: -lxx (See src/process.cpp for more detail)]"
@@ -50,22 +44,17 @@ int main(int argc, char *argv[])
     int options1{DEFAULT_OPTION_1};
     int options2{DEFAULT_OPTION_2};
 
-    if (argc == 3)
-    {
-        if (argv[2][0] != '-')
-        {
+    if (argc == 3) {
+        if (argv[2][0] != '-') {
             std::cerr << "Invalid Arguments: " << argv[2][0] << std::endl;
             return EXIT_FAILURE;
         }
-        if (argv[2][1] != 'l')
-        {
+        if (argv[2][1] != 'l') {
             std::cerr << "Invalid Arguments: " << argv[2][0] << std::endl;
             return EXIT_FAILURE;
         }
-        if (argv[2][2] == '1')
-            options1 = 1;
-        if (argv[2][2] && argv[2][3] == '2')
-            options2 = 2;
+        if (argv[2][2] == '1') options1 = 1;
+        if (argv[2][2] && argv[2][3] == '2') options2 = 2;
     }
 
     tplay::process::setup(options1, options2);
@@ -73,8 +62,7 @@ int main(int argc, char *argv[])
     std::string input_file(argv[1]);
     cv::VideoCapture InputVid(input_file);
 
-    if (!InputVid.isOpened())
-    {
+    if (!InputVid.isOpened()) {
         std::cerr << "Error Opening Video File" << std::endl;
         return EXIT_FAILURE;
     }
@@ -99,27 +87,28 @@ int main(int argc, char *argv[])
                                          ".tplaytemp.mp3", &setupCompleted);
 
     tplay::utils::String filename(argv[1]);
-    int framesPassed{0};
+    int framesPassed = 0;
+    int framesMissed = 0;
 
     while (!setupCompleted)
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
 
     const auto StartTime = std::chrono::steady_clock::now();
-    while (true)
-    {
+    while (true) {
         cv::Mat frame;
         InputVid >> frame;
         framesPassed++;
 
-        if (frame.empty())
-            break;
+        if (frame.empty()) break;
 
         auto expectedTime =
-            StartTime + std::chrono::microseconds(
-                            (int64_t)(1000000.0 * framesPassed / fps));
+            StartTime + std::chrono::microseconds(static_cast<int64_t>(
+                            1000000.0 * framesPassed / fps));
 
-        if (std::chrono::steady_clock::now() > expectedTime)
+        if (std::chrono::steady_clock::now() > expectedTime) {
+            framesMissed++;
             continue;
+        }
 
         int col = getWinCol();
         int row = getWinRow() - 1;
@@ -132,5 +121,8 @@ int main(int argc, char *argv[])
     }
 
     InputVid.release();
+
+    std::cout << "Performance Result: Skipped " << framesMissed << " frames\n";
+
     return EXIT_SUCCESS;
 }

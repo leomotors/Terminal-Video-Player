@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(Terminal-Video-Player VERSION 1.0.14)
+project(Terminal-Video-Player VERSION 1.0.15)
 
 # Config
 set(APP_VERSION "${CMAKE_PROJECT_VERSION}")
@@ -42,7 +42,7 @@ target_link_libraries(${EXECUTABLE_NAME} ${OpenCV_LIBS})
 target_include_directories(${EXECUTABLE_NAME} PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/gen)
 
 # CPP STANDARD
-set_property(TARGET ${EXECUTABLE_NAME} PROPERTY CXX_STANDARD 17)
+set_property(TARGET ${EXECUTABLE_NAME} PROPERTY CXX_STANDARD 20)
 
 # Install
 install(
