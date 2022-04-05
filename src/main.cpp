@@ -59,6 +59,8 @@ int main(int argc, char *argv[]) {
 
     tplay::process::setup(options1, options2);
 
+    tplay::process::setupColor(options2);
+
     std::string input_file(argv[1]);
     cv::VideoCapture InputVid(input_file);
 
@@ -89,9 +91,10 @@ int main(int argc, char *argv[]) {
     tplay::utils::String filename(argv[1]);
     int framesPassed = 0;
     int framesMissed = 0;
+    int totalLength = totalFrames / fps;
 
     while (!setupCompleted)
-        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        std::this_thread::sleep_for(std::chrono::microseconds(500));
 
     const auto StartTime = std::chrono::steady_clock::now();
     while (true) {
@@ -112,9 +115,9 @@ int main(int argc, char *argv[]) {
 
         int col = getWinCol();
         int row = getWinRow() - 1;
-        tplay::process::processFrame(
+        tplay::process::processFrameColor(
             frame, col, row,
-            tplay::utils::createHeader(filename, framesPassed, totalFrames, fps,
+            tplay::utils::createHeader(filename, framesPassed, totalLength, fps,
                                        col));
 
         std::this_thread::sleep_until(expectedTime);
@@ -122,7 +125,14 @@ int main(int argc, char *argv[]) {
 
     InputVid.release();
 
-    std::cout << "Performance Result: Skipped " << framesMissed << " frames\n";
+    int32_t frameRendered = totalFrames - framesMissed;
+    double apparentFPS = frameRendered / totalLength;
+
+    std::cout << "Missed " << framesMissed << " frames from total of "
+              << totalFrames << " frames\n";
+    std::cout << "Actual FPS: " << fps << "\n";
+    std::cout << "Average Apparent FPS: " << apparentFPS << "\n";
+    std::cout << "Benchmark Result: " << apparentFPS / fps * 100 << "%\n";
 
     return EXIT_SUCCESS;
 }

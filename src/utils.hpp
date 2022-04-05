@@ -11,7 +11,7 @@ struct String {
     String(char *filename);
 };
 
-std::string createHeader(String filename, int framesPassed, int totalFrames,
+std::string createHeader(String filename, int framesPassed, int totalLength,
                          double fps, int colLimit);
 
 std::string formatTime(int seconds);

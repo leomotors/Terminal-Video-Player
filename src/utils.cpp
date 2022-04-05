@@ -30,13 +30,12 @@ String::String(char *filename) : content(filename) {
     this->actualLength = y - 1;
 }
 
-std::string createHeader(String filename, int framesPassed, int totalFrames,
+std::string createHeader(String filename, int framesPassed, int totalLength,
                          double fps, int colLimit) {
     const std::string about = tplay::about::AboutShort();
 
     if (about.size() > (std::size_t)colLimit) return std::string(colLimit, ' ');
 
-    int totalLength = totalFrames / fps;
     int currentTime = framesPassed / fps;
 
     const std::string timePos =
