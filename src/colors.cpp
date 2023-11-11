@@ -24,21 +24,21 @@ const std::vector<Colors> disabledColors = {};
 const std::map<Colors, Color> WinTerm = {
     // Use neofetch to get these colors, these are specific to terminal
     {Colors::Black, {12, 12, 12}},
-    {Colors::Red, {197, 15, 31}},
-    {Colors::Green, {19, 161, 14}},
-    {Colors::Yellow, {193, 156, 0}},
-    {Colors::Blue, {0, 55, 218}},
-    {Colors::Magenta, {136, 23, 152}},
-    {Colors::Cyan, {58, 150, 221}},
-    {Colors::White, {204, 204, 204}},
-    {Colors::BrightBlack, {118, 118, 118}},
-    {Colors::BrightRed, {231, 72, 86}},
-    {Colors::BrightGreen, {22, 198, 12}},
-    {Colors::BrightYellow, {249, 241, 165}},
-    {Colors::BrightBlue, {59, 120, 255}},
-    {Colors::BrightMagenta, {180, 0, 158}},
-    {Colors::BrightCyan, {97, 214, 214}},
-    {Colors::BrightWhite, {242, 242, 242}}};
+    {Colors::Red, {184, 49, 27}},
+    {Colors::Green, {87, 192, 56}},
+    {Colors::Yellow, {198, 196, 63}},
+    {Colors::Blue, {12, 37, 191}},
+    {Colors::Magenta, {185, 62, 193}},
+    {Colors::Cyan, {88, 195, 197}},
+    {Colors::White, {199, 199, 199}},
+    {Colors::BrightBlack, {104, 104, 104}},
+    {Colors::BrightRed, {237, 119, 109}},
+    {Colors::BrightGreen, {140, 247, 122}},
+    {Colors::BrightYellow, {254, 252, 126}},
+    {Colors::BrightBlue, {108, 147, 203}},
+    {Colors::BrightMagenta, {237, 127, 248}},
+    {Colors::BrightCyan, {142, 250, 253}},
+    {Colors::BrightWhite, {255, 255, 255}}};
 //--- END USER CONFIG ---//
 
 bool isDisabledColor(Colors color) {

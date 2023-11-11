@@ -30,9 +30,17 @@ add_executable(${EXECUTABLE_NAME} ${APP_SRC})
 target_compile_options(${AUDIOLIB_NAME} PRIVATE -Wall -Wextra -Wno-unused-result -O3 -lm)
 target_compile_options(${WINSIZELIB_NAME} PRIVATE -Wall -Wextra -Wno-unused-result -O3 -lm)
 target_compile_options(${GETCHLIB_NAME} PRIVATE -Wall -Wextra -Wno-unused-result -O3 -lm)
-set(CMAKE_CXX_FLAGS "-Wall -Wextra -Wno-unused-result -Wno-unused-variable -O3 -lm -pthread -fconcepts")
+set(CMAKE_CXX_FLAGS "-Wall -Wextra -Wno-unused-result -Wno-unused-variable -O3 -lm -pthread")
 
 # Linking Libraries for playAudio
+link_directories("/opt/homebrew/lib")
+include_directories("/opt/homebrew/include")
+
+include_directories(/opt/homebrew/Cellar/libao/1.2.2/include)
+include_directories(/opt/homebrew/Cellar/mpg123/1.32.3/include)
+link_directories(/opt/homebrew/Cellar/libao/1.2.2/lib)
+link_directories(/opt/homebrew/Cellar/mpg123/1.32.3/lib)
+
 target_link_libraries(${AUDIOLIB_NAME} mpg123 ao)
 
 # Linking Libraries for main
